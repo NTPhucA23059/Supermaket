@@ -1,0 +1,98 @@
+﻿@model IEnumerable<Supermaket.Areas.Admin.Models.OrderModels>
+
+<h2 style="text-align: center; font-size: 36px; font-weight: bold;">Order List</h2>
+
+
+<div class="row">
+	<div class="col-12">
+		<div class="card">
+			<div class="card-header">
+				<h3 class="card-title">Order List</h3>
+				
+			</div>
+
+			<div class="card-body">
+				<table id="example1" class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th>Order ID</th>
+							<th>Full Name</th>
+							<th>Phone</th>
+							<th>Shipping Address</th>
+							<th>Status</th>
+							<th>Order Date</th>
+							<th>Discout</th>
+							<th>Total Amount</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var order in Model)
+						{
+							<tr>
+								<td>@order.OrderId</td>
+								<td>@order.FullName</td>
+								<td>@order.Phone</td>
+								<td>@order.ShippingAddress</td>
+								<td>@order.Status</td>
+								<td>@order.OrderDate.ToString("MM/dd/yyyy")</td>
+								<td>@order.DiscountAmount %</td>
+								<td>@order.TotalAmount</td>
+								<td>
+									
+									<form method="post" action="@Url.Action("UpdateStatus", "OrderAdmin", new { id = order.OrderId, area = "Admin" })">
+										<select name="Status" class="form-control">									
+											<option value="processing" selected=@(order.Status == "processing" ? "selected" : "")>Processing</option>
+											<option value="waiting_for_delivery" selected=@(order.Status == "waiting_for_delivery" ? "selected" : "")>Waiting for Delivery</option>
+											<option value="in_transit" selected=@(order.Status == "in_transit" ? "selected" : "")>In Transit</option>
+											<option value="paid" selected=@(order.Status == "paid" ? "selected" : "")>Paid</option>
+										
+										</select>
+										<button type="submit" class="btn btn-success btn-sm" style="margin-top: 5px;">Update Status</button>
+									</form>
+
+
+									<a href="@Url.Action("ViewDetail", "OrderAdmin", new { id = order.OrderId, area = "Admin" })" class="btn btn-primary btn-sm" style="margin-top: 5px;">
+										<i class="fas fa-eye"></i> View Detail
+									</a>
+									<a href="@Url.Action("Delete", "OrderAdmin", new { id = order.OrderId, area = "Admin" })" class="btn btn-danger btn-sm" style="margin-top: 5px;">
+										<i class="fas fa-trash"></i> Delete
+									</a>
+								</td>
+							</tr>
+						}
+					</tbody>
+					<tfoot>
+						<tr>
+						</tr>
+					</tfoot>
+				</table>
+
+				<div class="card-footer clearfix">
+					<ul class="pagination pagination-sm m-0 float-right">
+						@if (ViewBag.page > 1)
+						{
+							<li class="page-item">
+								<a class="page-link" href="@Url.Action("Index", "OrderAdmin", new { page = ViewBag.page - 1, search = ViewBag.search, area = "Admin" })">&laquo;</a>
+							</li>
+						}
+
+						@for (int i = 1; i <= ViewBag.noOfPage; i++)
+						{
+							<li class="page-item">
+								<a class="page-link" href="@Url.Action("Index", "OrderAdmin", new { page = i, search = ViewBag.search, area = "Admin" })" class="pagination-link @(i == ViewBag.page ? "active" : "")">@i</a>
+							</li>
+						}
+
+						@if (ViewBag.page < ViewBag.noOfPage)
+						{
+							<li class="page-item">
+								<a class="page-link" href="@Url.Action("Index", "OrderAdmin", new { page = ViewBag.page + 1, search = ViewBag.search, area = "Admin" })">&raquo;</a>
+							</li>
+						}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

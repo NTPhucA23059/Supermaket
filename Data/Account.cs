@@ -1,0 +1,43 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Supermaket.Data;
+
+public partial class Account
+{
+    public int AccountId { get; set; }
+
+    public string Username { get; set; } = null!;
+
+    public string Email { get; set; } = null!;
+
+    public string? ContactNumber { get; set; }
+
+    public string Password { get; set; } = null!;
+
+    public string Role { get; set; } = null!;
+
+    public string Status { get; set; } = null!;
+
+    public string? ResetPasswordCode { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+
+    public DateTime UpdatedAt { get; set; }
+
+    public DateTime? LastLogin { get; set; }
+
+    public string? Address { get; set; }
+
+    public string? ProfilePicture { get; set; }
+
+    public string? CreditCardNumber { get; set; }
+
+    public string? CreditCardExpiry { get; set; }
+
+    public string? RandomKey { get; set; }
+
+    public DateTime? ResetPasswordExpires { get; set; }
+
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+}

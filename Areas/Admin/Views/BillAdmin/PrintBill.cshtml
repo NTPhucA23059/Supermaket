@@ -1,0 +1,70 @@
+﻿@model Supermaket.Areas.Admin.Models.BillModels
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bill</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .header {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .bill-details {
+            margin-top: 30px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .bill-details th, .bill-details td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Invoice Details</h2>
+    </div>
+
+    <table class="bill-details">
+        <tr>
+            <th>Bill ID</th>
+            <td>@Model.BillId</td>
+        </tr>
+        <tr>
+            <th>User Name</th>
+            <td>@Model.UserName</td>
+        </tr>
+        <tr>
+            <th>Bill Date</th>
+            <td>@Model.BillDate.ToString("MM/dd/yyyy")</td>
+        </tr>
+        <tr>
+            <th>Total Amount</th>
+            <td>@Model.TotalAmount</td>
+        </tr>
+        <tr>
+            <th>Payment Method</th>
+            <td>@Model.PaymentMethod</td>
+        </tr>
+        <tr>
+            <th>Payment Status</th>
+            <td>@Model.PaymentStatus</td>
+        </tr>
+    </table>
+
+    <div class="footer">
+        <p>Thank you for your business!</p>
+    </div>
+</body>
+</html>

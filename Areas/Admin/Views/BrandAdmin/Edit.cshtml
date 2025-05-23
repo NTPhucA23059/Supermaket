@@ -1,0 +1,65 @@
+﻿@model Supermaket.Areas.Admin.Models.BrandModels
+
+@{
+    ViewData["Title"] = "Edit Brand";
+}
+
+<div class="row d-flex justify-content-center align-items-center">
+    <!-- Left column -->
+    <div class="col-md-6">
+        <!-- General form elements -->
+        <div class="card card-warning">
+            <div class="card-header">
+                <h2 class="card-title text-center w-100">
+                    <i class="fas fa-edit mr-2"></i> <strong>Edit Brand</strong>
+                </h2>
+            </div>
+
+            <!-- Form start -->
+            <form asp-action="Edit" method="post" enctype="multipart/form-data" asp-route-id="@Model.BrandId">
+                <input type="hidden" asp-for="BrandId" />
+
+                <div class="card-body">
+                    <!-- Brand Name -->
+                    <div class="form-group">
+                        <label asp-for="BrandName"></label>
+                        <input asp-for="BrandName" class="form-control" readonly />
+                        <span asp-validation-for="BrandName" class="text-danger"></span>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label asp-for="Description"></label>
+                        <textarea asp-for="Description" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="form-group">
+                        <label asp-for="Status"></label>
+                        <select asp-for="Status" class="form-control">
+                            <option value="Available" selected="@Model.Status == " Available"">Available</option>
+                            <option value="Discontinued" selected="@Model.Status == " Discontinued"">Discontinued</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer d-flex justify-content-end">
+                    <a href="@Url.Action("Index", "BrandAdmin", new { area = "Admin" })" class="btn btn-secondary">Back</a>
+
+                    <button type="reset" class="btn btn-danger  ml-2">Cancel</button>
+                    <button type="submit" class="btn btn-warning ml-2">Save Changes</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

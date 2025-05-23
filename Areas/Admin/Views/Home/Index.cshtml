@@ -1,0 +1,157 @@
+﻿<div class="row">
+    <!-- Account Created -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3>@ViewBag.AccountsCreated</h3> 
+                <p>Accounts Created</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-person-add"></i>
+            </div>
+          
+        </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3>@ViewBag.CategoriesCount</h3> 
+                <p>Categories</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-folder"></i>
+            </div>
+           
+        </div>
+    </div>
+
+    <!-- Brands -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3>@ViewBag.BrandsCount</h3> 
+                <p>Brands</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-pricetag"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Revenue for the Month -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>@ViewBag.MonthlyRevenue</h3> 
+                <p>Revenue This Month</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-social-usd"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Revenue Statistics by Date -->
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Revenue Statistics by Date</h3>
+        </div>
+        <div class="card-body">
+            <form>
+                <select class="form-control filter-date">
+                    <option value="today">Today</option>
+                    <option value="this_month">This Month</option>
+                    <option value="all_year">All Year</option>
+                </select>
+            </form>
+            <div id="revenueChartByDate" class="chart tab-pane active" style="height: 250px;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Product Sales Statistics by Category and Brand -->
+<div class="col-md-12">
+    <div class="card card-info">
+        <div class="card-header">
+            <h3 class="card-title">Product Sales Statistics by Category and Brand</h3>
+        </div>
+        <div class="card-body">
+            <form>
+                <select class="form-control" id="filterCategoryOrBrand">
+                    <option value="category">Category</option>
+                    <option value="brand">Brand</option>
+                </select>
+            </form>
+            <div id="productSalesChart" class="chart tab-pane active" style="height: 250px;"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+  <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      var chartDataByDate = [];
+      var chartByDate = new Morris.Line({
+          element: 'revenueChartByDate',
+          parseTime: false,
+          data: chartDataByDate,
+          xkey: 'date',
+          ykeys: ['revenue'],
+          labels: ['Revenue']
+      });
+
+    var chartDataByCategoryOrBrand = [];
+    var chartByCategoryOrBrand = new Morris.Bar({
+        element: 'productSalesChart',
+        data: chartDataByCategoryOrBrand,
+        xkey: 'CategoryBrand',
+        ykeys: ['TotalQuantitySold'],
+        labels: ['Quantity Sold'],
+        barColors: ['#0b62a4'], 
+        xLabelAngle: 45, 
+        hideHover: 'auto',
+        xLabelMargin: 10, 
+        grid: true,
+    });
+
+
+      $(".filter-date").change(function () {
+          var filterdate = $(this).val();
+          $.ajax({
+              type: "POST",
+              url: "@Url.Action("GetRevenueByDate", "Home")",
+              data: { filterdate: filterdate },
+              success: function (data) {
+                  chartByDate.setData(data); 
+              }
+          });
+      });
+      $("#filterCategoryOrBrand").change(function () {
+          var filterBy = $(this).val();
+          $.ajax({
+              type: "POST",
+              url: "@Url.Action("GetRevenueByCategoryOrBrand", "Home")",
+              data: { filterBy: filterBy },
+              success: function (data) {
+                  var formattedData = data.map(function(item) {
+                      return {
+                          CategoryBrand: item.categoryBrand,
+                          TotalQuantitySold: item.totalQuantitySold
+                      };
+                  });
+                  chartByCategoryOrBrand.setData(formattedData);
+              }
+          });
+      });
+
+      $(".filter-date").val("this_month").change();  
+      $("#filterCategoryOrBrand").val("category").change(); 
+    });
+  </script>
+}

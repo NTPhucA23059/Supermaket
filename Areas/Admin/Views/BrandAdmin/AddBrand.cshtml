@@ -1,0 +1,68 @@
+﻿@model Supermaket.Areas.Admin.Models.BrandModels
+
+@{
+    ViewData["Title"] = "Add Brand";
+}
+
+<div class="row d-flex justify-content-center align-items-center">
+    <!-- Left column -->
+    <div class="col-md-6">
+        <!-- General form elements -->
+        <div class="card card-primary">
+            <div class="card-header">
+                <h2 class="card-title text-center w-100">
+                    <i class="fas fa-tag mr-2"></i> <strong>Add Brand</strong>
+                </h2>
+            </div>
+
+            <!-- /.card-header -->
+            <!-- Form start -->
+            <form asp-action="AddBrand" method="post">
+                <div class="card-body">
+                    <!-- Brand Name -->
+                    <div class="form-group">
+                        <label asp-for="BrandName"></label>
+                        <input asp-for="BrandName" class="form-control" />
+                        <span asp-validation-for="BrandName" class="text-danger"></span>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label asp-for="Description"></label>
+                        <textarea asp-for="Description" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="form-group">
+                        <label asp-for="Status"></label>
+                        <select asp-for="Status" class="form-control">
+                            <option value="">-- Select Status --</option>
+                            <option value="Available">Available</option>
+                            <option value="Discontinued">Discontinued</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer d-flex justify-content-end">
+                    <a href="@Url.Action("Index", "BrandAdmin", new { area = "Admin" })" class="btn btn-secondary ml-2">Back</a>
+
+                    <button type="reset" class="btn btn-danger  ml-2">Cancel</button>
+                    <button type="submit" class="btn btn-primary ml-2">Confirm</button>
+
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <!-- /.row -->
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

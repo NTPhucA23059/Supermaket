@@ -1,0 +1,10 @@
+﻿@model IEnumerable<Supermaket.Models.ProductModel>
+@{
+    ViewData["Title"] = "Search";
+    Layout ="_LayoutCustomer";
+    Layout = "_ProductList";
+}
+
+<h2 class="text-center text-primary mb-4">Search Results for: <span class="text-muted">@ViewBag.query</span></h2>
+@await Html.PartialAsync("ProductItem", Model)
+

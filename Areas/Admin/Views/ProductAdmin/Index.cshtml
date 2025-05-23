@@ -1,0 +1,107 @@
+﻿@model IEnumerable<Supermaket.Areas.Admin.Models.ProductModels>
+
+<h2 style="text-align: center; font-size: 36px; font-weight: bold;">Product List</h2>
+<div style="display: flex; justify-content: flex-end; margin: 10px;">
+    <a class="btn btn-outline-primary btn-flat" style="padding: 10px 70px; font-size: 16px;" href="@Url.Action("AddProduct", "ProductAdmin", new { area = "Admin" })">
+        <i class="fas fa-plus" style="margin-right: 8px;"></i> Add To Product
+    </a>
+</div>
+
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Product List</h3>
+                <div class="card-tools">
+                    <form method="get" class="form-inline">
+                        <div class="input-group input-group-sm">
+                            <label for="search">Search: </label>
+                            <input type="search" name="search" id="search" class="form-control" placeholder="Search for products" style="width: 200px;" value="@ViewBag.search" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Brand</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Status</th>
+                            <th>Discount</th>
+                            <th>Created At</th>
+                            <th>Updated At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Model)
+                        {
+                            <tr>
+                                <td><img src="~/Image/Product/@product.ProductImage" class="img-fluid w-100 rounded-top" style="width:100%;height:50px; object-fit: cover; border: solid 1px #000; " alt="@product.ProductName"></td>
+                                <td>@product.ProductName</td>
+                                <td>@(product.Category?.CategoryName ?? "N/A")</td>
+                                <td>@(product.Brand?.BrandName ?? "N/A")</td>
+
+                                <td>@product.Price</td>
+                                <td>@product.QuantityInStock</td>
+                                <td>@product.Status</td>
+                                <td>@product.Discount%</td>
+                                <td>@product.CreatedAt.ToString("MM/dd/yyyy")</td>
+                                <td>@product.UpdatedAt?.ToString("MM/dd/yyyy")</td>
+                                <td>
+                                    <a href="@Url.Action("Edit", "ProductAdmin", new { id = product.ProductId, area = "Admin" })" class="btn btn-info btn-sm"><i class ="fas fa-pencil-alt"></i> Edit</a>
+                                    <a href="@Url.Action("Delete", "ProductAdmin", new { id = product.ProductId, area = "Admin" })" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <div class="card-footer clearfix">
+                    <ul class="pagination pagination-sm m-0 float-right">
+                        @if (ViewBag.page > 1)
+                        {
+                            <li class="page-item">
+                            <!-- Nút Previous -->
+                                <a class="page-link" href="@Url.Action("Index", "ProductAdmin", new { page = ViewBag.page - 1, search = ViewBag.search, area = "Admin" })" class="rounded">&laquo;</a>
+                            </li>
+                        }
+
+                        @for (int i = 1; i <= ViewBag.noOfPage; i++)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", "ProductAdmin", new { page = i, search = ViewBag.search, area = "Admin" })" class="pagination-link @(i == ViewBag.page ? "active" : "")"> <span>&nbsp;&nbsp;</span> @i <span>&nbsp;&nbsp;</span> </a>
+                            </li>
+                      
+                        }
+
+                        @if (ViewBag.page < ViewBag.noOfPage)
+                        {
+                            <!-- Nút Next -->
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", "ProductAdmin", new { page = ViewBag.page + 1, search = ViewBag.search, area = "Admin" })" class="rounded">&raquo;</a>
+                            </li>
+                        }
+                    <ul/>
+
+                </div>
+            </div>
+
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+</div>

@@ -1,0 +1,35 @@
+﻿@model Supermaket.Data.Category
+
+@{
+    ViewData["Title"] = "Delete Category";
+}
+
+<div class="row d-flex justify-content-center align-items-center">
+    <!-- Left column -->
+    <div class="col-md-6">
+        <h2 style="text-align: center; font-size: 36px; font-weight: bold;">Delete Category</h2>
+
+        <h3 style="text-align: center;">Are you sure you want to delete this category?</h3>
+
+        <div class="card">
+            <div class="card-body">
+                <h4 class="text-center">Category Name: @Model.CategoryName</h4>
+                <p class="text-center">Description: @(Model.Description ?? "N/A")</p>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center mt-3">
+            <form asp-action="DeleteConfirmed" method="post" asp-route-id="@Model.CategoryId" class="text-center">
+                <input type="hidden" asp-for="CategoryId" />
+                <button type="submit" class="btn btn-danger btn-lg mx-2">Delete</button>
+                <a asp-action="Index" class="btn btn-secondary btn-lg mx-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

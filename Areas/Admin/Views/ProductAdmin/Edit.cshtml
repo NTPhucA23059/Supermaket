@@ -1,0 +1,121 @@
+﻿@model Supermaket.Areas.Admin.Models.ProductModels
+
+@{
+    ViewData["Title"] = "Edit Product";
+}
+
+<div class="row d-flex justify-content-center align-items-center">
+    <!-- Left column -->
+    <div class="col-md-6">
+        <!-- General form elements -->
+        <div class="card card-warning">
+            <div class="card-header">
+                <h2 class="card-title text-center w-100">
+                    <i class="fas fa-box mr-2"></i> <strong>Edit Product</strong>
+                </h2>
+            </div>
+
+            <!-- Form start -->
+            <form asp-action="Edit" method="post" enctype="multipart/form-data" asp-route-id="@Model.ProductId">
+                <input type="hidden" asp-for="ProductId" />
+
+                <div class="card-body">
+                    <!-- Product Name -->
+                    <div class="form-group">
+                        <label asp-for="ProductName"></label>
+                        <input asp-for="ProductName" class="form-control" readonly />
+                        <span asp-validation-for="ProductName" class="text-danger"></span>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label asp-for="Description"></label>
+                        <textarea asp-for="Description" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="form-group">
+                        <label asp-for="Price"></label>
+                        <input asp-for="Price" type="number" class="form-control" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+
+                    <!-- Quantity In Stock -->
+                    <div class="form-group">
+                        <label asp-for="QuantityInStock"></label>
+                        <input asp-for="QuantityInStock" type="number" class="form-control" />
+                        <span asp-validation-for="QuantityInStock" class="text-danger"></span>
+                    </div>
+
+                    <!-- Discount -->
+                    <div class="form-group">
+                        <label asp-for="Discount"></label>
+                        <input asp-for="Discount" type="number"  class="form-control" />
+                        <span asp-validation-for="Discount" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="CategoryId"></label>
+                        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories">
+                            <option value="">-- Select Category --</option>
+                        </select>
+                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="BrandId"></label>
+                        <select asp-for="BrandId" class="form-control" asp-items="ViewBag.Brands">
+                            <option value="">-- Select Brand --</option>
+                        </select>
+                        <span asp-validation-for="BrandId" class="text-danger"></span>
+                    </div>
+
+                    <!-- Product Image -->
+                    <div class="form-group">
+                        <label asp-for="ProductImage"></label>
+                        <input asp-for="ProductImage" type="file" class="form-control" />
+                        <span asp-validation-for="ProductImage" class="text-danger"></span>
+                        @if (!string.IsNullOrEmpty(Model.ProductImage))
+                        {
+                            <div>
+                                <img src="~/Image/Product/@Model.ProductImage" alt="Current Product Image" width="100" />
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Status -->
+                    <div class="form-group">
+                        <label asp-for="Status"></label>
+                        <select asp-for="Status" class="form-control">
+                            <option value="">-- Select Status --</option>
+                            <option value="Available" selected="@Model.Status == " Available"">Available</option>
+                            <option value="New Product" selected="@Model.Status == " New Product"">New Product</option>
+                            <option value="Out of Stock" selected="@Model.Status == " Out of Stock"">Out of Stock</option>
+                            <option value="Discontinued" selected="@Model.Status == " Discontinued"">Discontinued</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer d-flex justify-content-end">
+                    <a href="@Url.Action("Index", "ProductAdmin", new { area = "Admin" })" class="btn btn-secondary ml-2">Back</a>
+
+                    <button type="reset" class="btn btn-danger ml-2">Cancel</button>
+                    <button type="submit" class="btn btn-warning ml-2">Save Changes</button>
+
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <!-- /.row -->
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

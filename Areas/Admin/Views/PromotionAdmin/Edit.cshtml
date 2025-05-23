@@ -1,0 +1,83 @@
+﻿@model Supermaket.Areas.Admin.Models.PromotionModels
+
+@{
+    ViewData["Title"] = "Edit Promotion";
+}
+
+<div class="row d-flex justify-content-center align-items-center">
+    <!-- Left column -->
+    <div class="col-md-6">
+        <!-- General form elements -->
+        <div class="card card-warning">
+            <div class="card-header">
+                <h2 class="card-title text-center w-100">
+                    <i class="fas fa-gift mr-2"></i> <strong>Edit Promotion</strong>
+                </h2>
+            </div>
+
+            <!-- Form start -->
+            <form asp-action="Edit" method="post" enctype="multipart/form-data" asp-route-id="@Model.PromotionId">
+                <input type="hidden" asp-for="PromotionId" />
+
+                <div class="card-body">
+                    <!-- Promotion Code -->
+                    <div class="form-group">
+                        <label asp-for="PromotionCode"></label>
+                        <input asp-for="PromotionCode" class="form-control" readonly />
+                        <span asp-validation-for="PromotionCode" class="text-danger"></span>
+                    </div>
+
+                    <!-- Promotion Type -->
+                    <div class="form-group">
+                        <label asp-for="PromotionType"></label>
+                        <input asp-for="PromotionType" class="form-control" />
+                        <span asp-validation-for="PromotionType" class="text-danger"></span>
+                    </div>
+
+                    <!-- Promotion Description -->
+                    <div class="form-group">
+                        <label asp-for="PromotionDescription"></label>
+                        <textarea asp-for="PromotionDescription" class="form-control"></textarea>
+                        <span asp-validation-for="PromotionDescription" class="text-danger"></span>
+                    </div>
+
+                    <!-- Discount Percentage -->
+                    <div class="form-group">
+                        <label asp-for="DiscountPercentage"></label>
+                        <input asp-for="DiscountPercentage" type="number" class="form-control" />
+                        <span asp-validation-for="DiscountPercentage" class="text-danger"></span>
+                    </div>
+
+                    <!-- Start Date -->
+                    <div class="form-group">
+                        <label asp-for="StartDate"></label>
+                        <input asp-for="StartDate" type="date" class="form-control" />
+                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                    </div>
+
+                    <!-- End Date -->
+                    <div class="form-group">
+                        <label asp-for="EndDate"></label>
+                        <input asp-for="EndDate" type="date" class="form-control" />
+                        <span asp-validation-for="EndDate" class="text-danger"></span>
+                    </div>               
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer d-flex justify-content-end">
+                    <a href="@Url.Action("Index", "PromotionAdmin", new { area = "Admin" })" class="btn btn-secondary ml-2">Back</a>
+                    <button type="reset" class="btn btn-danger ml-2">Cancel</button>
+                    <button type="submit" class="btn btn-warning ml-2">Save Changes</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <!-- /.row -->
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,95 @@
+﻿@model IEnumerable<Supermaket.Areas.Admin.Models.AccountModels>
+
+<h2 style="text-align: center; font-size: 36px; font-weight: bold;">Account List</h2>
+<div style="display: flex; justify-content: flex-end; margin: 10px;">
+    <a class="btn btn-outline-primary btn-flat" style="padding: 10px 70px; font-size: 16px;" href="@Url.Action("AddAccount", "AccountAdmin", new { area = "Admin" })">
+        <i class="fas fa-plus" style="margin-right: 8px;"></i> Add New Account
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Account List</h3>
+                <div class="card-tools">
+                    <form method="get" class="form-inline">
+                        <div class="input-group input-group-sm">
+                            <label for="search">Search: </label>
+                            <input type="search" name="search" id="search" class="form-control" placeholder="Search for accounts" style="width: 200px;" value="@ViewBag.search" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Contact Number</th>
+                            <th>Role</th>                                          
+                            <th>Address</th>                   
+                            <th>Credit Card Expiry</th>
+                            <th>Created At</th>
+                            <th>Updated At</th>
+                            <th>Last Login</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var account in Model)
+                        {
+                            <tr>
+                                <td>@account.Username</td>
+                                <td>@account.Email</td>
+                                <td>@account.ContactNumber</td>
+                                <td>@account.Role</td>                                                         
+                                <td>@account.Address</td>
+                                <td>@account.CreatedAt.ToString("MM/dd/yyyy")</td>
+                                <td>@account.UpdatedAt.ToString("MM/dd/yyyy")</td>
+                                <td>@account.LastLogin?.ToString("MM/dd/yyyy")</td>
+                                <td>@account.CreditCardExpiry</td>
+                                <td>
+                                    <a href="@Url.Action("Edit", "AccountAdmin", new { id = account.AccountId, area = "Admin" })" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i> Edit</a>
+                                    <a href="@Url.Action("Delete", "AccountAdmin", new { id = account.AccountId, area = "Admin" })" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <div class="card-footer clearfix">
+                    <ul class="pagination pagination-sm m-0 float-right">
+                        @if (ViewBag.page > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", "AccountAdmin", new { page = ViewBag.page - 1, search = ViewBag.search, area = "Admin" })" class="rounded">&laquo;</a>
+                            </li>
+                        }
+
+                        @for (int i = 1; i <= ViewBag.noOfPage; i++)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", "AccountAdmin", new { page = i, search = ViewBag.search, area = "Admin" })" class="pagination-link @(i == ViewBag.page ? "active" : "")"> <span>&nbsp;&nbsp;</span> @i <span>&nbsp;&nbsp;</span> </a>
+                            </li>
+                        }
+
+                        @if (ViewBag.page < ViewBag.noOfPage)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", "AccountAdmin", new { page = ViewBag.page + 1, search = ViewBag.search, area = "Admin" })" class="rounded">&raquo;</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,120 @@
+﻿@model IEnumerable<Supermaket.Data.Bill>
+
+<h2 style="text-align: center; font-size: 36px; font-weight: bold;">Bill List</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Message"]
+    </div>
+}
+<button id="downloadPdfBtn" class="btn btn-primary" style="margin-bottom: 20px;">Download PDF</button>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Bill List</h3>
+                <div class="card-tools">
+                    <form method="get" class="form-inline">
+                        <div class="input-group input-group-sm">
+                            <label for="search">Search: </label>
+                            <input type="search" name="search" id="search" class="form-control" placeholder="Search for bills" style="width: 200px;" value="@ViewBag.search" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <!-- Thêm ID cho bảng để jsPDF có thể nhận diện -->
+                <table class="table table-bordered table-striped" id="billTable">
+                    <thead>
+                        <tr>
+                            <th>Bill ID</th>
+                            <th>User Name</th>
+                            <th>Bill Date</th>
+                            <th>Total Amount</th>
+                            <th>Payment Method</th>
+                            <th>Payment Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var bill in Model)
+                        {
+                            <tr>
+                                <td>@bill.BillId</td>
+                                <td>@bill.UserName</td>
+                                <td>@bill.BillDate.ToString("MM/dd/yyyy")</td>
+                                <td>@bill.TotalAmount</td>
+                                <td>@bill.PaymentMethod</td>
+                                <td>@bill.PaymentStatus</td>
+                                <td>
+                                    <a href="@Url.Action("Delete", "BillAdmin", new { id = bill.BillId, area = "Admin" })" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                    <a href="#" class="btn btn-success btn-sm">
+                                        <i class="fas fa-print"></i> Print
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <div class="card-footer clearfix">
+                    <ul class="pagination pagination-sm m-0 float-right">
+                        @if (ViewBag.page > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", "BillAdmin", new { page = ViewBag.page - 1, search = ViewBag.search, area = "Admin" })">&laquo;</a>
+                            </li>
+                        }
+
+                        @for (int i = 1; i <= ViewBag.noOfPage; i++)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", "BillAdmin", new { page = i, search = ViewBag.search, area = "Admin" })">@i</a>
+                            </li>
+                        }
+
+                        @if (ViewBag.page < ViewBag.noOfPage)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", "BillAdmin", new { page = ViewBag.page + 1, search = ViewBag.search, area = "Admin" })">&raquo;</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script>
+        document.getElementById('downloadPdfBtn').addEventListener('click', function () {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Lấy nội dung bảng để chuyển thành PDF
+            const billTable = document.getElementById('billTable');
+
+            if (billTable) {
+                // Sử dụng html2canvas với callback (không sử dụng Promise)
+                html2canvas(billTable, {
+                    onrendered: function (canvas) {
+                        const imgData = canvas.toDataURL('image/png');
+                        doc.addImage(imgData, 'PNG', 10, 10, 180, 160);  // Tùy chỉnh kích thước ảnh trong PDF
+                        doc.save('BillList.pdf');
+                    }
+                });
+            } else {
+                console.error("Bảng với ID 'billTable' không tìm thấy.");
+            }
+        });
+    </script>
+}
+

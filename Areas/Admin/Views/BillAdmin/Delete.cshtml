@@ -1,0 +1,18 @@
+﻿@model Supermaket.Data.Bill
+
+<h2>Are you sure you want to delete this bill?</h2>
+
+<div>
+    <p><strong>Bill ID:</strong> @Model.BillId</p>
+    <p><strong>User Name:</strong> @Model.UserName</p>
+    <p><strong>Bill Date:</strong> @Model.BillDate.ToString("MM/dd/yyyy")</p>
+    <p><strong>Total Amount:</strong> @Model.TotalAmount</p>
+    <p><strong>Payment Method:</strong> @Model.PaymentMethod</p>
+    <p><strong>Payment Status:</strong> @Model.PaymentStatus</p>
+</div>
+
+<form action="@Url.Action("DeleteConfirmed", "BillAdmin", new { id = Model.BillId, area = "Admin" })" method="post">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-danger">Yes, Mark as Deleted</button>
+    <a href="@Url.Action("Index", "BillAdmin", new { area = "Admin" })" class="btn btn-secondary">No, Cancel</a>
+</form>

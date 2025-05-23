@@ -1,0 +1,219 @@
+﻿@model IEnumerable<Supermaket.Models.CartItemModels>
+@{
+	ViewData["Title"] = "Checkout";
+}
+
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+	<h1 class="text-center text-white display-6">Checkout</h1>
+	<ol class="breadcrumb justify-content-center mb-0">
+		<li class="breadcrumb-item"><a href="#">Home</a></li>
+		<li class="breadcrumb-item"><a href="#">Pages</a></li>
+		<li class="breadcrumb-item active text-white">Checkout</li>
+	</ol>
+</div>
+<!-- Single Page Header End -->
+<!-- Checkout Page Start -->
+<div class="container-fluid py-5">
+	<div class="container py-5">
+		<h1 class="mb-4">Billing details</h1>
+
+		<form asp-action="Checkout" asp-controller="Cart" method="post" id="checkout-form">
+			<div class="row g-5">
+			
+				@Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+				<div class="col-md-12 col-lg-6 col-xl-7">
+					<div class="form-check my-3" >
+						<input type="checkbox" name="SameCustomerInformation" class="form-check-input" id="SameCustomerInformation" value="false">
+						<label class="form-check-label" for="SameCustomerInformation">SameCustomerInformation ?</label>
+					</div>
+					<div class="form-item mt-3 delivery-info" id="full-name-field">
+	                <label class="form-label my-3">Full name<sup>*</sup></label>
+						  <input type="text" name="FullName" class="form-control">
+					</div>
+					<div class="form-item mt-3 delivery-info" id="address-field">
+						<label class="form-label my-3">Address<sup>*</sup></label>
+						<input type="text" name="Address" class="form-control" placeholder="123, Can Tho">
+					</div>
+					<div class="form-item mt-3 delivery-info" id="phone-field">
+						<label class="form-label my-3">Phone: <sup>*</sup></label>
+						<input type="text" name="Phone" class="form-control">
+					
+					</div>
+					<div class="form-item mt-3" id="note-field">
+						<textarea name="Note" class="form-control" spellcheck="false" cols="30" rows="11" placeholder="Ghi chú"></textarea>
+					</div>	
+				</div>
+				<div class="col-md-12 col-lg-6 col-xl-5">
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+								<tr>
+									<th scope="col">Products</th>
+									<th scope="col">Name</th>
+									<th scope="col">Price</th>
+									<th scope="col">Quantity</th>
+									<th scope="col">Total</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var item in Model)
+								{
+									<tr>
+										<th scope="row">
+											<div class="d-flex align-items-center mt-2">
+												<img src="~/Image/Product/@item.Product.ProductImage" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="@item.Product.ProductName">
+											</div>
+										</th>
+										<td class="py-5">@item.Product.ProductName</td>
+										<td class="py-5">@item.Price</td>
+										<td class="py-5">@item.Quantity</td>
+										<td class="py-5">$@item.Total</td>
+									</tr>
+								}
+								<tr>
+									<td colspan="4">TOTAL</td>
+									<td>@Model.Sum(p => p.Total)</td>
+								</tr>
+
+								<!-- Coupon Section -->
+								<tr>
+									<td colspan="4">Coupon Code</td>
+									<td>
+										<input id="couponCode" type="text" class="form-control" placeholder="Coupon Code" />
+										<button class="btn btn-primary mt-2" type="button" id="applyCouponBtn">Apply Coupon</button>
+										<p id="couponMessage" class="text-danger mt-3"></p>
+									</td>
+								</tr>
+
+								<!-- Discount Section -->
+								<tr>
+									<td colspan="4">Discount</td>
+									<td><p id="discount-info">You saved $0.00 (0% Off)</p></td>
+								</tr>
+
+								<!-- After Discount Section -->
+								<tr>
+									<td colspan="4">After Discount</td>
+									<td><p id="cart-total">@Model.Sum(p => p.Total)</p></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>				
+					<div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
+						<div class="col-12">
+							<div class="form-check text-start my-3">
+								<input type="checkbox" class="form-check-input bg-primary border-0" id="Paypal-1" name="Paypal" value="Paypal">
+								<label class="form-check-label" for="Paypal-1">Paypal</label>
+							</div>
+						</div>
+					</div>
+					<div class="row g-4 text-center align-items-center justify-content-center pt-4">
+					<div id="paypal-button-container" class="form-item mt-3" style="max-width:1000px; display:none;"></div> 
+					<button  id="field" type="submit" type="button" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Place Order</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- Checkout Page End -->
+@section Scripts {
+	<script src="https://www.paypal.com/sdk/js?client-id=@ViewBag.PaypalClientdId"></script>
+	<script>
+		$(document).ready(function () {
+			$("#SameCustomerInformation").change(function () {
+				if ($(this).prop("checked")) {
+					$(this).val(true);
+					$(".delivery-info").addClass("d-none");
+				} else {
+					$(this).val(false);
+					$(".delivery-info").removeClass("d-none");
+				}
+			});
+		});
+		 $(document).ready(function () {
+            $("#Paypal-1").change(function () {
+                if ($(this).prop("checked")) {
+                    $("#full-name-field").hide();
+                    $("#address-field").hide();
+                    $("#phone-field").hide();
+                    $("#note-field").hide();
+                    $("#checkout-form button").hide();  
+                    $("#paypal-button-container").show();
+                } else {
+                    // Hiển thị lại các trường khi bỏ chọn PayPal
+                    $("#full-name-field").show();
+                    $("#address-field").show();
+                    $("#phone-field").show();
+                    $("#note-field").show();
+                    $("#checkout-form button").show();  
+                    // Ẩn nút PayPal
+                    $("#paypal-button-container").hide();
+                }
+            });
+        });
+		paypal.Buttons({
+			style: {
+				layout: 'vertical',
+				color: 'silver',
+				tagline: 'false'
+			},
+			createOrder: (data, actions) => {
+				return fetch("/Cart/create-paypal-order", {
+					method: "POST",
+				}).then((response) => {
+					if (!response.ok) {
+						return response.json().then(error => { throw error; });
+					}
+					return response.json(); 
+				}).then((order) => order.id) 
+					.catch(error => alert(error.message));
+			},
+			onApprove: (data, actions) => {	
+				return fetch(`/Cart/capture-paypal-order?orderId=${data.orderID}`, {
+					method: "POST",
+				})
+					.then((response) => {
+						if (!response.ok) {
+							return response.json().then(error => { throw error; });
+						}
+						window.location.href = "/Cart/PaymentSuccess?orderId=" + data.orderID;
+
+					})
+					.catch(error => alert(error.message));
+			}
+		}).render('#paypal-button-container');
+		$(document).ready(function () {
+			// Coupon apply logic
+			$("#applyCouponBtn").click(function () {
+				var couponCode = $("#couponCode").val();
+				if (!couponCode) {
+					alert("Please enter a coupon code.");
+					return;
+				}
+
+				$.ajax({
+					url: "/Cart/CheckCoupon",
+					type: "POST",
+					data: JSON.stringify({ couponCode: couponCode }),
+					contentType: "application/json",
+					success: function (data) {
+						if (data.exists) {
+							$("#discount-info").text(`You saved $${data.discountAmount.toFixed(2)} (${data.discountPercentage}% Off)`);
+							$("#cart-subtotal").text(`$ ${data.totalAmount.toFixed(2)}`);
+							$("#cart-total").text(`$ ${data.totalAfterDiscount.toFixed(2)}`);
+						} else {
+							alert(data.message || "Coupon code is invalid.");
+						}
+					},
+					error: function () {
+						alert("An error occurred while applying the coupon.");
+					}
+				});
+			});
+		});
+	</script>
+}

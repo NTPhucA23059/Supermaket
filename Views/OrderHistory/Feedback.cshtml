@@ -1,0 +1,153 @@
+﻿@model Supermaket.Models.ProductModel;
+
+@{
+    ViewData["Title"] = "Detail";
+}
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Shop Detail</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">Product</a></li>
+        <li class="breadcrumb-item active text-white">@Model.ProductName</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+<!-- Single Product Start -->
+<div class="container-fluid py-5 mt-5">
+    <div class="container py-5">
+        <div class="row g-4 mb-5">
+            <div class="col-lg-8 col-xl-9">
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="border rounded">
+                            <a asp-action="Detail" asp-route-itemid="@Model.ProductId">
+                                <img src="~/Image/Product/@Model.ProductImage" class="img-fluid rounded" alt="@Model.ProductImage">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <h4 class="fw-bold mb-3">@Model.ProductName</h4>
+                        <p class="mb-3">Brands: @Model.BrandName</p>
+                        <p class="mb-3">Categories: @Model.CategoryName</p>
+                        <h5 class="fw-bold mb-3">@Model.Price</h5>
+                        <div class="d-flex mb-4">
+                            <p class="mb-3"> @Model.AverageRating</p> <i class="fa fa-star text-warning"></i>
+                        </div>
+
+                        <p class="mb-4">@Model.Description</p>
+
+                        <input type="hidden" name="productId" value="@Model.ProductId" />
+                    </div>
+                    <div class="col-lg-12">
+                        <nav>
+                            <div class="nav nav-tabs mb-3">
+                                <button class="nav-link active border-white border-bottom-0" type="button" role="tab"
+                                        id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#nav-about"
+                                        aria-controls="nav-about" aria-selected="true">
+                                    Product Information
+                                </button>
+                                <button class="nav-link border-white border-bottom-0" type="button" role="tab"
+                                        id="nav-mission-tab" data-bs-toggle="tab" data-bs-target="#nav-mission"
+                                        aria-controls="nav-mission" aria-selected="false">
+                                    Reviews
+                                </button>
+                            </div>
+                        </nav>
+                        <div class="tab-content mb-5">
+                            <div class="tab-pane active" id="nav-about" role="tabpanel" aria-labelledby="nav-about-tab">
+                                @Model.Description
+                            </div>
+                            <div class="tab-pane" id="nav-mission" role="tabpanel" aria-labelledby="nav-mission-tab">
+                                @foreach (var review in Model.Reviews)
+                                {
+                                    <div class="d-flex mb-4">
+                                        <img  src=" ~ /Image/Account/Default" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
+                                        <div class="">
+                                            <p class="mb-2" style="font-size: 14px;">@review.ReviewDate.ToString("MMMM dd, yyyy")</p>
+                                            <div class="d-flex justify-content-between">
+                                                <h5>@review.userName</h5>
+                                                <div class="d-flex mb-3">
+                                                    @for (int i = 1; i <= 5; i++)
+                                                    {
+                                                        <i class="fa fa-star @(i <= review.Rating ? "text-warning" : "text-secondary")"></i>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <p>@review.ReviewText</p>
+                                        </div>
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                    <form asp-action="SubmitReview" asp-controller="OrderHistory" method="post" id="reviewForm">
+                        <input type="hidden" name="productId" value="@Model.ProductId" />
+                        <input type="hidden" name="orderItemId" value="@Model.OrderItemId" />
+
+                        <h4 class="mb-5 fw-bold">Leave a Reply</h4>
+
+                        <div class="row g-4">
+                            <div class="col-lg-12">
+                                <div class="border-bottom rounded my-4">
+                                    <textarea name="ReviewText" id="reviewContent" class="form-control border-0" cols="30" rows="8" placeholder="Your Review *" spellcheck="false" required></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="d-flex justify-content-between py-3 mb-5">
+                                    <div class="d-flex align-items-center">
+                                        <p class="mb-0 me-3">Please rate:</p>
+                                        <div class="d-flex align-items-center" style="font-size: 12px;" id="rating-stars">
+                                            <i class="fa fa-star text-muted" data-rating="1"></i>
+                                            <i class="fa fa-star text-muted" data-rating="2"></i>
+                                            <i class="fa fa-star text-muted" data-rating="3"></i>
+                                            <i class="fa fa-star text-muted" data-rating="4"></i>
+                                            <i class="fa fa-star text-muted" data-rating="5"></i>
+                                        </div>
+                                    </div>
+
+                                    <!-- Hidden input for the rating, set value dynamically -->
+                                    <input type="hidden" id="rating" name="Rating" value="0" required> <!-- Make it required -->
+
+                                    <button type="submit" class="btn border border-secondary text-primary rounded-pill px-4 py-3">Post Comment</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Add click event to the stars
+    document.querySelectorAll('#rating-stars i').forEach(star => {
+        star.addEventListener('click', function () {
+            var rating = this.getAttribute('data-rating'); // Get the selected rating value
+            document.getElementById('rating').value = rating; // Set the hidden input to this value
+
+            // Change star colors based on the rating selected
+            document.querySelectorAll('#rating-stars i').forEach(star => {
+                star.classList.remove('text-warning');
+                star.classList.add('text-muted');
+            });
+
+            for (var i = 0; i < rating; i++) {
+                document.querySelectorAll('#rating-stars i')[i].classList.remove('text-muted');
+                document.querySelectorAll('#rating-stars i')[i].classList.add('text-warning');
+            }
+        });
+    });
+
+    // Ensure that rating is selected before submitting the form
+    document.getElementById('reviewForm').addEventListener('submit', function(event) {
+        var rating = document.getElementById('rating').value;
+        if (rating == 0) {
+            alert('Please select a rating before submitting your review.');
+            event.preventDefault(); // Prevent form submission
+        }
+    });
+</script>

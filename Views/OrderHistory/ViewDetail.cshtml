@@ -1,0 +1,66 @@
+﻿@model Supermaket.Areas.Admin.Models.OrderModels
+
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">
+        View History - Order
+    </h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+        <li class="breadcrumb-item active text-white">Order</li>
+    </ol>
+</div>
+
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Product Image</th>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th></th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.OrderItems)
+                    {
+                        var totalPrice = item.Price * item.Quantity;
+                        <tr>
+                            <td>
+                                <img src="~/Image/Product/@item.Product.ProductImage" class="img-fluid" alt="@item.Product.ProductName" style="max-width: 80px; height: auto;">
+                            </td>
+                            <td>@item.Product.ProductName</td>
+                            <td>$ @item.Price</td>
+                            <td>@item.Quantity</td>
+                            <td>$ @totalPrice</td>
+                            <td>
+                              
+                            </td>
+                            <td>
+                                @if (Model.Status.ToLower() == "delivered")
+                                {
+                                    <form class="d-inline">
+                                        <input type="hidden" name="orderItemId" value="@item.OrderItemId" />
+                                        <a href="@Url.Action("Feedback", "OrderHistory", new { orderItemId = item.OrderItemId })" class="btn btn-info">
+                                            Feedback
+                                        </a>
+                                    </form>
+                                }
+
+                               
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<a href="@Url.Action("Index", "OrderHistory", new { area = "Admin" })" class="btn btn-primary mt-3">Back to Orders</a>

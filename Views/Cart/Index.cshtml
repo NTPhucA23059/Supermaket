@@ -1,0 +1,225 @@
+﻿@model List<Supermaket.Models.CartItemModels>
+@{
+	ViewData["Title"] = "Giỏ hàng";
+}
+
+
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+	<h1 class="text-center text-white display-6">Cart</h1>
+	<ol class="breadcrumb justify-content-center mb-0">
+		<li class="breadcrumb-item"><a href="#">Home</a></li>
+		<li class="breadcrumb-item"><a href="#">Pages</a></li>
+		<li class="breadcrumb-item active text-white">Cart</li>
+	</ol>
+</div>
+<!-- Single Page Header End -->
+<!-- Cart Page Start -->
+<div class="container-fluid py-5">
+	<div class="container py-5">
+		@if (TempData["ErrorMessage"] != null)
+		{
+			<div class="alert alert-danger">
+				@TempData["ErrorMessage"]
+			</div>
+		}
+		<div class="table-responsive">
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col">Products</th>
+						<th scope="col">Name</th>
+						<th scope="col">Price</th>
+						<th scope="col">Quantity</th>
+						<th scope="col">Total</th>
+						<th scope="col">Handle</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var item in Model)
+					{
+						<tr>
+							<th scope="row">
+								<div class="d-flex align-items-center">
+									<img src="~/Image/Product/@item.Product.ProductImage" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="@item.Product.ProductName">
+								</div>
+							</th>
+							<td>
+								<p class="mb-0 mt-4">
+									<a asp-action="Detail" asp-controller="Product" asp-route-id="@item.ProductId">
+										@item.Product.ProductName
+									</a>
+								</p>
+							</td>
+							<td>
+								<p class="mb-0 mt-4">$ @item.Price</p>
+							</td>
+							<!-- Quantity -->
+							<td>
+								<form id="update-quantity-form-@item.CartItemId" method="post" action="/Cart/UpdateQuantity">
+									<input type="hidden" name="cartItemId" value="@item.CartItemId" />
+									<div class="input-group quantity mt-4" style="width: 100px;">
+										<div class="input-group-btn">
+											<button class="btn btn-sm btn-minus rounded-circle bg-light border" type="button" data-action="decrease" data-cartitemid="@item.CartItemId">
+												<i class="fa fa-minus"></i>
+											</button>
+										</div>
+										<input type="text" class="form-control form-control-sm text-center border-0" name="quantity" value="@item.Quantity" readonly />
+										<div class="input-group-btn">
+											<button class="btn btn-sm btn-plus rounded-circle bg-light border" type="button" data-action="increase" data-cartitemid="@item.CartItemId">
+												<i class="fa fa-plus"></i>
+											</button>
+										</div>
+									</div>
+								</form>
+							</td>
+
+							<td>
+								<p class="mb-0 mt-4 total-price" id="total-price-@item.CartItemId">$ @item.Total</p>
+							</td>
+							<td>
+								<form action="/Cart/RemoveCartItem" method="post" class="d-inline">
+									<input type="hidden" name="cartItemId" value="@item.CartItemId" />
+									<button type="submit" class="btn btn-md rounded-circle bg-light border mt-4">
+										<i class="fa fa-times text-danger"></i>
+									</button>
+								</form>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+		<div class="mt-5">
+			<input id="couponCode" type="text" class="border-0 border-bottom rounded me-5 py-3 mb-4" placeholder="Coupon Code">
+			<button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button" id="applyCouponBtn">Apply Coupon</button>
+			<p id="couponMessage" class="text-danger mt-3"></p>
+		</div>
+
+		<div class="row g-4 justify-content-end">
+			<div class="col-8"></div>
+			<div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
+				<div class="bg-light rounded">
+					<div class="p-4">
+						<h1 class="display-6 mb-4">Cart <span class="fw-normal">Total</span></h1>
+						<div class="d-flex justify-content-between mb-4">
+							<h5 class="mb-0 me-4">Subtotal:</h5>
+							<p class="mb-0" id="cart-subtotal">$ @Model.Sum(p => p.Total)</p>
+						</div>
+						<div class="d-flex justify-content-between">
+							<h5 class="mb-0 me-4">Discount</h5>
+							<div class="">
+								<p class="mb-0" id="discount-info">You saved $0.00 (0% Off)</p>
+							</div>
+						</div>						
+					</div>
+					<div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
+						<h5 class="mb-0 ps-4 me-4">Total</h5>
+						<p class="mb-0 pe-4" id="cart-total">$ @Model.Sum(p => p.Total)</p>
+					</div>
+					<a class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" asp-action="Checkout" asp-controller="Cart">Proceed Checkout</a>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+<!-- Cart Page End -->
+@section Scripts {
+	<script>
+		$(document).on('click', '[data-action="increase"], [data-action="decrease"]', function (e) {
+			e.preventDefault(); 
+
+			var cartItemId = $(this).data('cartitemid');
+			var action = $(this).data('action');
+			var quantityInput = $('#update-quantity-form-' + cartItemId + ' input[name="quantity"]');
+
+			var oldQuantity = parseInt(quantityInput.val()); 
+			
+
+			var quantity = oldQuantity; 
+			// if (action === 'increase') {
+			// 	quantity;
+			// 	alert("Sau khi tăng: " + quantity);  
+			// } else if (action === 'decrease' && quantity > 1) {
+			// 	quantity;
+			// 	alert("Sau khi giảm: " + quantity);  
+			// }
+
+			quantityInput.val(quantity); 
+		
+			var isProcessing = false;
+			if (!isProcessing) {
+				isProcessing = true; 
+
+				$.ajax({
+					url: '/Cart/UpdateQuantity',
+					method: 'POST',
+					data: {
+						cartItemId: cartItemId,
+						quantity: quantity
+					},
+					success: function (data) {
+						isProcessing = false;
+
+						if (data.error) {
+							alert(data.error);
+							
+							return quantityInput.val(oldQuantity-1);
+						}
+						$('#total-price-' + cartItemId).text('$ ' + data.totalPrice.toFixed(2));
+						$('#cart-subtotal').text('$ ' + data.totalAmount.toFixed(2));
+						$('#cart-total').text('$ ' + data.totalAmount.toFixed(2));
+					},
+					error: function () {
+						isProcessing = false; 
+						alert("An error occurred. Please try again.");
+						quantityInput.val(oldQuantity); 
+					}
+				});
+			}
+		});
+
+
+
+
+
+		document.getElementById("applyCouponBtn").addEventListener("click", function () {
+			var couponCode = document.getElementById("couponCode").value;
+			var messageElement = document.getElementById("couponMessage");
+
+			if (!couponCode) {
+				messageElement.textContent = "Please enter a coupon code.";
+				return;
+			}
+
+			fetch('/Cart/CheckCoupon', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ couponCode: couponCode })  
+			})
+				.then(response => response.json())
+				.then(data => {
+					if (data.exists) {
+						
+
+						var discountInfo = `You saved $${data.discountAmount.toFixed(2)} (${data.discountPercentage}% Off)`;
+						document.getElementById("discount-info").textContent = discountInfo;
+
+						document.getElementById("cart-subtotal").textContent = `$ ${data.totalAmount.toFixed(2)}`;
+						document.getElementById("cart-total").textContent = `$ ${data.totalAfterDiscount.toFixed(2)}`;
+					} else {
+						messageElement.textContent = data.message || "Coupon code is invalid.";
+						messageElement.style.color = "red";
+					}
+				})
+				.catch(error => {
+					console.error('Error:', error);
+					messageElement.textContent = "An error occurred. Please try again.";
+					messageElement.style.color = "red";
+				});
+		});
+	</script>
+}

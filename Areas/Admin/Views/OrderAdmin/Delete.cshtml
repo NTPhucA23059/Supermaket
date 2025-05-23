@@ -1,0 +1,24 @@
+﻿@model Supermaket.Data.Order
+
+<h2>Confirm Delete Order - Order ID: @Model.OrderId</h2>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4>Are you sure you want to delete the order with ID: @Model.OrderId?</h4>
+                <p><strong>Full Name:</strong> @Model.FullName</p>
+                <p><strong>Phone:</strong> @Model.Phone</p>
+                <p><strong>Shipping Address:</strong> @Model.ShippingAddress</p>
+                <p><strong>Status:</strong> @Model.Status</p>
+                <p><strong>Order Date:</strong> @Model.OrderDate.ToString("MM/dd/yyyy")</p>
+                <p><strong>Total Amount:</strong> @Model.TotalAmount</p>
+
+                <form method="post" action="@Url.Action("DeleteConfirmed", "OrderAdmin", new { id = Model.OrderId, area = "Admin" })">
+                    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+                    <a href="@Url.Action("Index", "OrderAdmin", new { area = "Admin" })" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,92 @@
+﻿@model IEnumerable<Supermaket.Areas.Admin.Models.CategoryModels>
+
+<h2 style="text-align: center; font-size: 36px; font-weight: bold;">Category List</h2>
+<div style="display: flex; justify-content: flex-end; margin: 10px;">
+    <a class="btn btn-outline-primary btn-flat" style="padding: 10px 70px; font-size: 16px;" href="@Url.Action("AddCategory", "CategoryAdmin", new { area = "Admin" })">
+        <i class="fas fa-plus" style="margin-right: 8px;"></i> Add To Category
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Category List</h3>
+                <div class="card-tools">
+                    <form method="get" class="form-inline">
+                        <div class="input-group input-group-sm">
+                            <label for="search">Search: </label>
+                            <input type="search" name="search" id="search" class="form-control" placeholder="Search for categories" style="width: 200px;" value="@ViewBag.search" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Category Name</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                            <th>Updated At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var category in Model)
+                        {
+                            <tr>
+                                <td>@category.CategoryName</td>
+                                <td>@(category.Description ?? "N/A")</td>
+                                <td>@category.Status</td>
+                                <td>@category.CreatedAt.ToString("MM/dd/yyyy")</td>
+                                <td>@(category.UpdatedAt.HasValue ? category.UpdatedAt.Value.ToString("MM/dd/yyyy") : "N/A")</td>
+                                <td>
+                                    <a href="@Url.Action("Edit", "CategoryAdmin", new { id = category.CategoryId, area = "Admin" })" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i> Edit</a>
+                                    <a href="@Url.Action("Delete", "CategoryAdmin", new { id = category.CategoryId, area = "Admin" })" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <div class="card-footer clearfix">
+                    <ul class="pagination pagination-sm m-0 float-right">
+                        @if (ViewBag.page > 1)
+                        {
+                            <li class="page-item">
+                                <!-- Nút Previous -->
+                                <a class="page-link" href="@Url.Action("Index", "CategoryAdmin", new { page = ViewBag.page - 1, search = ViewBag.search, area = "Admin" })" class="rounded">&laquo;</a>
+                            </li>
+                        }
+
+                        @for (int i = 1; i <= ViewBag.noOfPage; i++)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", "CategoryAdmin", new { page = i, search = ViewBag.search, area = "Admin" })" class="pagination-link @(i == ViewBag.page ? "active" : "")"> <span>&nbsp;&nbsp;</span> @i <span>&nbsp;&nbsp;</span> </a>
+                            </li>
+                        }
+
+                        @if (ViewBag.page < ViewBag.noOfPage)
+                        {
+                            <!-- Nút Next -->
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", "CategoryAdmin", new { page = ViewBag.page + 1, search = ViewBag.search, area = "Admin" })" class="rounded">&raquo;</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+</div>

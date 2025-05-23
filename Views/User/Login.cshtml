@@ -1,0 +1,64 @@
+﻿@model Supermaket.Models.LoginModels
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_LayoutLogin";
+}
+<div class="login-box">
+    <div class="login-logo">
+        <a asp-controller="Home" asp-action="index"><b>Supermarket</b> </a>
+    </div>
+    <!-- /.login-logo -->
+    <div class="card">
+        <div class="card-body login-card-body">
+            <h2 class="login-box-msg">Login</h2>
+
+            <form asp-action="Login" method="POST" asp-route-returnurl="@ViewBag.ReturnUrl">
+                <!-- Error Summary -->
+                <div class="text-danger" asp-validation-summary="All"></div>
+
+                <div class="input-group mb-3">
+                    <input asp-for="Username" class="form-control" placeholder="Username" required>
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-user"></span>
+                        </div>
+                    </div>
+                </div>
+                <span asp-validation-for="Username" class="text-danger"></span>
+
+                <div class="input-group mb-3">
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Password" required>
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>
+                </div>
+                <span asp-validation-for="Password" class="text-danger"></span>
+
+                <div class="row">
+                    <div class="col-8">
+                        <div class="icheck-primary">
+                            <input type="checkbox" id="remember">
+                            <label for="remember">
+                                Remember Me
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                    </div>
+                </div>
+              
+            </form>         
+            <p class="mb-1">
+                <a href="@Url.Action("ForgotPassword", "User")">I forgot my password</a>
+            </p>
+            <p class="mb-0">
+                <a asp-action="Register" asp-controller="user" class="text-center">Register a new account</a>
+            </p>
+        </div>
+        <!-- /.login-card-body -->
+    </div>
+</div>

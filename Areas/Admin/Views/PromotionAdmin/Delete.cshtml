@@ -1,0 +1,39 @@
+﻿@model Supermaket.Data.Promotion
+
+@{
+    ViewData["Title"] = "Delete Promotion";
+}
+
+<div class="row d-flex justify-content-center align-items-center">
+    <!-- Left column -->
+    <div class="col-md-6">
+        <h2 style="text-align: center; font-size: 36px; font-weight: bold;">Delete Promotion</h2>
+
+        <h3 style="text-align: center;">Are you sure you want to delete this promotion?</h3>
+
+        <div class="card">
+            <div class="card-body">
+                <h4 class="text-center">Promotion Code : @Model.PromotionCode</h4>
+                <p class="text-center">Description: @Model.PromotionDescription</p>
+                <p><strong>Discount Percentage:</strong> @Model.DiscountPercentage%</p>
+                <p><strong>Start Date:</strong> @Model.StartDate.ToString("MM/dd/yyyy")</p>
+                <p><strong>End Date:</strong> @Model.EndDate.ToString("MM/dd/yyyy")</p>
+                <p><strong>Status:</strong> @Model.Status</p>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center mt-3">
+            <form asp-action="DeleteConfirmed" method="post" asp-route-id="@Model.PromotionId" class="text-center">
+                <input type="hidden" asp-for="PromotionId" />
+                <button type="submit" class="btn btn-danger btn-lg mx-2">Delete</button>
+                <a asp-action="Index" class="btn btn-secondary btn-lg mx-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

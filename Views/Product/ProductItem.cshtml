@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Supermaket.Models.ProductModel>
+@foreach(var item in Model)
+{
+	<div class="col-md-6 col-lg-6 col-xl-4">
+		<div class="rounded position-relative fruite-item">
+			<div class="fruite-img">
+				<a asp-action="Detail" asp-controller="Product" asp-route-id="@item.ProductId">
+					<img src="~/Image/Product/@item.ProductImage" class="img-fluid w-100 rounded-top" style="width:250px;height:300px; object-fit: cover; border: solid 0.5px gold ;border-bottom: none;" alt="@item.ProductName">
+				</a>
+			</div>
+
+			<div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">@item.CategoryName</div>
+			<div class="p-4 border border-secondary border-top-0 rounded-bottom">
+				<a asp-action="Detail" asp-controller="Product" asp-route-id="@item.ProductId"><h4 class="text-truncate">@item.ProductName</h4></a>
+				<p class="text-truncate">@item.Description</p>
+				
+				<p class="text-truncate">$@item.Price</p>
+				<div class="d-flex justify-content-between flex-lg-wrap">
+
+					<form action="/Cart/AddToCart" method="post" class="w-100 mt-2">
+							<input type="hidden" name="productId" value="@item.ProductId" />
+							<input type="hidden" name="quantity" value="1" />
+						<button type="submit" class="btn border border-secondary rounded-pill px-3 text-primary w-100">
+								<i class="fa fa-shopping-bag me-2 text-primary"></i> Add To Cart
+							</button>
+						</form>
+					<form asp-action="AddToCompare" asp-controller="cart" method="post" class="w-100 mt-2">
+						<input type="hidden" name="productId" value="@item.ProductId" />
+						<button type="submit" class="btn border border-secondary rounded-pill px-3 text-danger mt-2 w-100">
+							<i class="fa fa-exchange me-2 text-danger"></i> + Compare
+						</button>
+					</form>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+}

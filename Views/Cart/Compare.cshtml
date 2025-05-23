@@ -1,0 +1,75 @@
+﻿@model List<Supermaket.Models.ProductModel>
+@{
+    ViewData["Title"] = "So Sánh Sản Phẩm";
+}
+
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Compare Products</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+        <li class="breadcrumb-item active text-white">Compare</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+<!-- Compare Page Start -->
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Products</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Brand</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Handle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <th scope="row">
+                                <div class="d-flex align-items-center">
+                                    <img src="~/Image/Product/@item.ProductImage" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="@item.ProductName">
+                                </div>
+                            </th>
+                            <td>
+                                <p class="mb-0 mt-4">
+                                    <a asp-action="Detail" asp-controller="Product" asp-route-id="@item.ProductId">
+                                        @item.ProductName
+                                    </a>
+                                </p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.CategoryName</p> 
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.BrandName</p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.Price</p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.Description</p> 
+                            </td>
+                            <td>
+                                <form action="/cart/RemoveFromCompare" method="post" class="d-inline">
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <button type="submit" class="btn btn-md rounded-circle bg-light border mt-4">
+                                        <i class="fa fa-times text-danger"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Compare Page End -->

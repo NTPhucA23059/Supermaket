@@ -1,0 +1,52 @@
+﻿<div class="col-12">
+    <div class="pagination d-flex justify-content-center mt-5">
+        @if (ViewBag.page > 1)
+        {
+            <!-- Nút Previous -->
+            <a href="@Url.Action("Index", new { loai = ViewBag.loai, page = ViewBag.page - 1 })"
+               class="rounded">&laquo;</a>
+        }
+
+        @if (ViewBag.noOfPage > 7)
+        {
+            <!-- Luôn hiển thị trang đầu -->
+            <a href="@Url.Action("Index", new { loai = ViewBag.loai, page = 1 })"
+               class="rounded @(ViewBag.page == 1 ? "active" : "")">1</a>
+
+            @if (ViewBag.page > 4)
+            {
+                <span class="rounded">...</span>
+            }
+
+            @for (int i = Math.Max(2, ViewBag.page - 2); i <= Math.Min(ViewBag.noOfPage - 1, ViewBag.page + 2); i++)
+            {
+                <a href="@Url.Action("Index", new { loai = ViewBag.loai, page = i })"
+                   class="rounded @(i == ViewBag.page ? "active" : "")">@i</a>
+            }
+
+            @if (ViewBag.page < ViewBag.noOfPage - 3)
+            {
+                <span class="rounded">...</span>
+            }
+
+            <!-- Luôn hiển thị trang cuối -->
+            <a href="@Url.Action("Index", new { loai = ViewBag.loai, page = ViewBag.noOfPage })"
+               class="rounded @(ViewBag.page == ViewBag.noOfPage ? "active" : "")">@ViewBag.noOfPage</a>
+        }
+        else
+        {
+            @for (int i = 1; i <= ViewBag.noOfPage; i++)
+            {
+                <a href="@Url.Action("Index", new { loai = ViewBag.loai, page = i })"
+                   class="rounded @(i == ViewBag.page ? "active" : "")">@i</a>
+            }
+        }
+
+        @if (ViewBag.page < ViewBag.noOfPage)
+        {
+            <!-- Nút Next -->
+            <a href="@Url.Action("Index", new { loai = ViewBag.loai, page = ViewBag.page + 1 })"
+               class="rounded">&raquo;</a>
+        }
+    </div>
+</div>
